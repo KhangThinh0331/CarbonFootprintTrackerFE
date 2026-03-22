@@ -91,7 +91,7 @@ function VerifyEmailForm() {
         try {
             const res = await authService.resendOtp(email);
             toast.success(res.data);
-            setCooldown(30);
+            setCooldown(60);
         } catch (err: any) {
             toast.error(
                 err.response?.data?.message ||
