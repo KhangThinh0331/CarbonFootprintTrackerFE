@@ -50,7 +50,9 @@ export default function RegisterPage() {
         return () => window.removeEventListener("mousemove", move);
     }, []);
 
-    /* ================= PASSWORD STRENGTH ================= */
+    /* ================= PASSWORD ================= */
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+
     const getStrength = () => {
         const pwd = formData.password;
         let score = 0;
@@ -63,9 +65,24 @@ export default function RegisterPage() {
 
     const strength = getStrength();
 
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+    /* ================= HANDLE ================= */
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
 
-    /* ================= PROGRESS ================= */
+        setFormData(prev => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        if (name === "password") {
+            if (!passwordRegex.test(value)) {
+                setPasswordError("Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt");
+            } else {
+                setPasswordError("");
+            }
+        }
+    };
+
     const simulateProgress = () => {
         let val = 0;
         const interval = setInterval(() => {
@@ -75,24 +92,10 @@ export default function RegisterPage() {
         }, 120);
     };
 
-    /* ================= HANDLE ================= */
-    const handleChange = (e: any) => {
-        const value = e.target.value;
-
-        setFormData({ ...formData, password: value });
-
-        if (!passwordRegex.test(value)) {
-            setPasswordError("Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt");
-        } else {
-            setPasswordError("");
-        }
-    };
-
     const handleRegister = async (e: any) => {
         e.preventDefault();
         setLoading(true);
         setProgress(0);
-
         simulateProgress();
 
         try {
@@ -111,7 +114,7 @@ export default function RegisterPage() {
                 router.push(`/verify-email?email=${formData.email}`);
             }, 2000);
         } catch (err: any) {
-            toast.error(err.response?.data?.message || err.response?.data || "Có lỗi xảy ra");
+            toast.error(err.response?.data?.message || "Có lỗi xảy ra");
             setProgress(0);
         } finally {
             setLoading(false);
@@ -126,32 +129,32 @@ export default function RegisterPage() {
                 return;
             }
             const res = await authService.googleLogin({
-                idToken: credentialResponse.credential as string,
+                idToken: credentialResponse.credential,
             });
             localStorage.setItem("token", res.data.token);
             toast.success(res.data.message);
             setTimeout(() => router.push("/"), 1200);
         } catch (err: any) {
-            toast.error(err.response?.data?.message || err.response?.data);
+            toast.error(err.response?.data?.message);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center bg-[#FDFBF7] overflow-hidden">
+        <div className="relative flex min-h-screen items-center justify-center bg-background overflow-hidden">
 
             {/* BACKGROUND */}
             <div className="absolute inset-0">
-                <div className="absolute w-[500px] h-[500px] bg-[#AAF0D1] rounded-full blur-3xl opacity-20 -top-20 -left-20" />
-                <div className="absolute w-[400px] h-[400px] bg-[#AAF0D1] rounded-full blur-3xl opacity-10 bottom-0 right-0" />
+                <div className="absolute w-[500px] h-[500px] bg-accent rounded-full blur-3xl opacity-20 -top-20 -left-20" />
+                <div className="absolute w-[400px] h-[400px] bg-accent rounded-full blur-3xl opacity-10 bottom-0 right-0" />
             </div>
 
-            {/* FLOATING LEAVES */}
+            {/* FLOATING ICON */}
             {[...Array(5)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute text-[#228B22]/30"
+                    className="absolute text-primary/30"
                     style={{
                         top: `${10 + i * 15}%`,
                         left: `${5 + i * 18}%`,
@@ -173,28 +176,22 @@ export default function RegisterPage() {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="w-full max-w-md p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-[#AAF0D1]/40 shadow-xl z-10"
+                className="w-full max-w-md p-8 rounded-2xl bg-surface backdrop-blur-xl border border-border shadow-xl z-10"
             >
 
                 {/* PROGRESS */}
                 {loading && (
-                    <div className="mb-4 h-1 bg-gray-200 rounded">
-                        <motion.div className="h-full bg-[#228B22]" animate={{ width: `${progress}%` }} />
+                    <div className="mb-4 h-1 bg-border rounded">
+                        <motion.div className="h-full bg-primary" animate={{ width: `${progress}%` }} />
                     </div>
                 )}
 
-                {/* SUCCESS */}
                 {success ? (
                     <div className="text-center py-10">
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="bg-[#AAF0D1]/40 p-4 rounded-full inline-block mb-4 text-[#228B22] text-2xl"
-                        >
+                        <div className="bg-accent/40 p-4 rounded-full inline-block mb-4 text-primary text-2xl">
                             ✓
-                        </motion.div>
-
-                        <h2 className="text-lg font-semibold text-[#1A3021]">
+                        </div>
+                        <h2 className="text-lg font-semibold text-foreground">
                             Đăng ký thành công
                         </h2>
                     </div>
@@ -202,13 +199,13 @@ export default function RegisterPage() {
                     <>
                         {/* HEADER */}
                         <div className="text-center mb-6">
-                            <div className="bg-[#AAF0D1]/40 p-3 rounded-full inline-block mb-2">
-                                <Leaf className="text-[#228B22]" />
+                            <div className="bg-accent/40 p-3 rounded-full inline-block mb-2">
+                                <Leaf className="text-primary" />
                             </div>
-                            <h2 className="text-lg font-semibold text-[#1A3021]">
+                            <h2 className="text-lg font-semibold text-foreground">
                                 Tạo tài khoản
                             </h2>
-                            <p className="text-xs text-[#1A3021]/60">
+                            <p className="text-xs text-foreground/60">
                                 Sống bền vững bắt đầu từ việc đo lường dấu chân carbon cá nhân
                             </p>
                         </div>
@@ -217,30 +214,21 @@ export default function RegisterPage() {
                         <motion.form
                             initial="hidden"
                             animate="visible"
-                            variants={{
-                                visible: { transition: { staggerChildren: 0.08 } },
-                            }}
+                            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
                             onSubmit={handleRegister}
                             className="space-y-4"
                         >
-
-                            {[
-                                { icon: <User size={16} />, name: "username", placeholder: "Tên đăng nhập" },
-                                { icon: <IdCard size={16} />, name: "fullName", placeholder: "Họ và tên" },
-                                { icon: <Mail size={16} />, name: "email", placeholder: "Email" }
-                            ].map((f, i) => (
-                                <motion.div key={i} variants={itemAnim}>
-                                    <InputField {...f} onChange={handleChange} />
-                                </motion.div>
-                            ))}
+                            <InputField icon={<User size={16} />} name="username" placeholder="Tên đăng nhập" onChange={handleChange} />
+                            <InputField icon={<IdCard size={16} />} name="fullName" placeholder="Họ và tên" onChange={handleChange} />
+                            <InputField icon={<Mail size={16} />} name="email" placeholder="Email" onChange={handleChange} />
 
                             {/* PASSWORD */}
-                            <motion.div variants={itemAnim}>
-                                <div className="flex items-center border border-[#AAF0D1]/50 rounded-lg px-3
-                                focus-within:border-[#228B22] 
-                                focus-within:ring-2 focus-within:ring-[#AAF0D1]">
+                            <div>
+                                <div className="flex items-center border border-border rounded-lg px-3
+                                focus-within:border-primary 
+                                focus-within:ring-2 focus-within:ring-accent">
 
-                                    <Lock size={16} className="text-[#1A3021]/40 mr-2" />
+                                    <Lock size={16} className="text-foreground/40 mr-2" />
 
                                     <input
                                         type={showPwd ? "text" : "password"}
@@ -248,37 +236,33 @@ export default function RegisterPage() {
                                         placeholder="Mật khẩu"
                                         onChange={handleChange}
                                         required
-                                        className="flex-1 py-3 outline-none bg-transparent text-sm text-[#1A3021] placeholder:text-[#1A3021]/40"
+                                        className="flex-1 py-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
                                     />
+
                                     <button
                                         type="button"
                                         onClick={() => setShowPwd(!showPwd)}
-                                        className="ml-2 text-[#1A3021]/40 hover:text-[#228B22]"
+                                        className="ml-2 text-foreground/40 hover:text-primary"
                                     >
                                         {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                                     </button>
                                 </div>
+
                                 {passwordError && (
                                     <p className="text-red-500 text-xs mt-1">{passwordError}</p>
                                 )}
-
-
-                                {/* Strength */}
                                 {formData.password && (
                                     <div className="mt-2">
                                         <div className="flex justify-between items-center mb-1">
                                             <span className="text-xs font-medium text-gray-600">Mức độ bảo mật:</span>
                                             <span className={`text-xs font-bold ${strength <= 1 ? "text-red-500" :
-                                                strength === 2 ? "text-yellow-600" :
-                                                    strength === 3 ? "text-[#228B22]" : "text-[#1A3021]"
+                                                strength === 2 ? "text-yellow-500" :
+                                                    strength === 3 ? "text-primary" :
+                                                        "text-foreground"
                                                 }`}>
-                                                {strength <= 1 && "Yếu"}
-                                                {strength === 2 && "Trung bình"}
-                                                {strength === 3 && "Khá"}
-                                                {strength >= 4 && "Mạnh"}
                                             </span>
                                         </div>
-                                        <div className="h-1 bg-gray-200 rounded overflow-hidden">
+                                        <div className="h-1 bg-border rounded overflow-hidden">
                                             <div
                                                 className={`h-full transition-all duration-300 ease-in-out
                                                     ${strength <= 1
@@ -293,35 +277,32 @@ export default function RegisterPage() {
                                         </div>
                                     </div>
                                 )}
-                            </motion.div>
+                            </div>
 
                             {/* BUTTON */}
                             <motion.button
-                                variants={itemAnim}
                                 whileTap={{ scale: 0.97 }}
                                 whileHover={{ scale: 1.02 }}
                                 disabled={loading || passwordError !== ""}
-                                className="w-full p-3 rounded-lg bg-[#228B22] text-white font-medium hover:brightness-110 active:scale-95 transition disabled:bg-gray-300"
+                                className="w-full p-3 rounded-lg bg-primary text-white font-medium hover:brightness-110 transition disabled:bg-gray-300"
                             >
                                 {loading ? "Đang xử lý..." : "Đăng ký"}
                             </motion.button>
-
                         </motion.form>
+
+                        {/* GOOGLE */}
                         <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200"></div>
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="bg-white px-4 text-gray-500 font-medium">Hoặc tiếp tục với</span>
-                            </div>
+                            <div className="border-t border-border"></div>
+                            <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-background px-3 text-xs text-foreground/60">
+                                Hoặc tiếp tục với
+                            </span>
                         </div>
 
-                        {/* Nút Google */}
-                        <div className="relative w-full">
+                        <div className="relative">
                             <motion.button
                                 whileTap={{ scale: 0.98 }}
                                 whileHover={{ scale: 1.01 }}
-                                className="w-full p-3.5 rounded-xl border border-gray-300 bg-white font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:border-gray-400 flex items-center justify-center gap-3"
+                                className="w-full p-3.5 rounded-lg border border-border bg-surface font-semibold text-foreground shadow-sm transition-all hover:bg-background transition flex items-center justify-center gap-3"
                             >
                                 <svg width="20" height="20" viewBox="0 0 48 48">
                                     <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
@@ -331,21 +312,16 @@ export default function RegisterPage() {
                                 </svg>
                                 <span>Đăng ký với Google</span>
                             </motion.button>
-                            <div className="absolute inset-0 opacity-0 cursor-pointer overflow-hidden">
-                                <GoogleLogin
-                                    onSuccess={handleSuccess}
-                                    onError={() => toast.error("Google login bị lỗi")}
-                                    // Tùy chỉnh nút ẩn thật to để phủ kín nút custom
-                                    shape="rectangular"
-                                    width="1000px"
-                                />
+
+                            <div className="absolute inset-0 opacity-0">
+                                <GoogleLogin onSuccess={handleSuccess} onError={() => toast.error("Google login lỗi")} />
                             </div>
                         </div>
 
                         {/* FOOTER */}
-                        <p className="mt-5 text-center text-sm text-[#1A3021]/60">
+                        <p className="mt-5 text-center text-sm text-foreground/60">
                             Đã có tài khoản?{" "}
-                            <Link href="/login" className="text-[#228B22] hover:underline">
+                            <Link href="/login" className="text-primary hover:underline">
                                 Đăng nhập
                             </Link>
                         </p>
@@ -357,19 +333,18 @@ export default function RegisterPage() {
 }
 
 /* INPUT */
-function InputField({ icon, name, placeholder, type = "text", onChange }: any) {
+function InputField({ icon, name, placeholder, onChange }: any) {
     return (
-        <div className="flex items-center border border-[#AAF0D1]/50 rounded-lg px-3
-                    focus-within:border-[#228B22] 
-                    focus-within:ring-2 focus-within:ring-[#AAF0D1]">
-            <div className="text-[#1A3021]/40 mr-2">{icon}</div>
+        <div className="flex items-center border border-border rounded-lg px-3
+        focus-within:border-primary 
+        focus-within:ring-2 focus-within:ring-accent">
+            <div className="text-foreground/40 mr-2">{icon}</div>
             <input
-                type={type}
                 name={name}
                 placeholder={placeholder}
                 onChange={onChange}
                 required
-                className="w-full p-3 outline-none bg-transparent text-sm text-[#1A3021] placeholder:text-[#1A3021]/40"
+                className="w-full p-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
             />
         </div>
     );

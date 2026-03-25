@@ -1,7 +1,6 @@
 // src/services/authService.ts
 import axiosClient from "@/src/lib/axiosClient";
 
-// Định nghĩa sẵn các interface (kiểu dữ liệu) nếu bạn dùng TypeScript cho chặt chẽ
 export interface LoginData {
   username: string;
   password: string;

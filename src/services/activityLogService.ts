@@ -11,17 +11,29 @@ export interface ActivityLogRequest {
 export const activityLogService = {
   // 1. Lưu một hoạt động mới (VD: Đi xe máy 10km)
   logActivity: (data: ActivityLogRequest) => {
-    return axiosClient.post("/activity-logs", data); 
+    return axiosClient.post("/activity-logs", data);
   },
-  
+
   // 2. Lấy danh sách lịch sử hoạt động của User đang đăng nhập
-  getMyLogs: (page: number = 0, size: number = 20) => {
-    return axiosClient.get(`/activity-logs?page=${page}&size=${size}`);
+  getMyLogs: (page: number = 0, size: number = 20, month = null, year = null) => {
+    return axiosClient.get(`/activity-logs`, {
+      params: {
+        page,
+        size,
+        month,
+        year
+      }
+    });
   },
 
   // 3. Lấy tổng lượng CO2 trong tháng (nếu Backend có API này, nếu chưa có ta sẽ tính ở Frontend tạm)
-  getTotalCo2: () => {
-    return axiosClient.get("/activity-logs/total-co2");
+  getTotalCo2: (month = null, year = null) => {
+    return axiosClient.get(`/activity-logs/total-co2`, {
+      params: {
+        month,
+        year
+      }
+    });
   },
 
   getChartData: () => {

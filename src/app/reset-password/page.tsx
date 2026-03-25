@@ -167,11 +167,11 @@ function VerifyEmailForm() {
     }
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center bg-[#FDFBF7] overflow-hidden">
+        <div className="relative flex min-h-screen items-center justify-center bg-background overflow-hidden">
 
             {/* CURSOR GLOW */}
             <motion.div
-                className="pointer-events-none fixed w-40 h-40 rounded-full bg-[#AAF0D1] opacity-30 blur-3xl"
+                className="pointer-events-none fixed w-40 h-40 rounded-full bg-accent opacity-30 blur-3xl"
                 animate={{
                     x: cursor.x - 80,
                     y: cursor.y - 80,
@@ -180,8 +180,8 @@ function VerifyEmailForm() {
 
             {/* BACKGROUND */}
             <div className="absolute inset-0">
-                <div className="absolute w-[500px] h-[500px] bg-[#AAF0D1] blur-3xl opacity-20 -top-20 -left-20 rounded-full" />
-                <div className="absolute w-[400px] h-[400px] bg-[#228B22] blur-3xl opacity-10 bottom-0 right-0 rounded-full" />
+                <div className="absolute w-[500px] h-[500px] bg-accent rounded-full blur-3xl opacity-20 -top-20 -left-20" />
+                <div className="absolute w-[400px] h-[400px] bg-primary rounded-full blur-3xl opacity-10 bottom-0 right-0" />
 
                 {/* NOISE */}
                 <div className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay">
@@ -198,7 +198,7 @@ function VerifyEmailForm() {
             {[...Array(4)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute text-[#AAF0D1]"
+                    className="absolute text-primary/30 dark:text-primary/20"
                     style={{
                         top: `${15 + i * 18}%`,
                         left: `${8 + i * 20}%`,
@@ -222,25 +222,25 @@ function VerifyEmailForm() {
                     rotateY: tilt.y,
                 }}
                 className="
-          w-full max-w-md p-8 rounded-2xl
-          bg-white/80 backdrop-blur-xl
-          border border-white/40
-          shadow-xl z-10 text-center
-        "
+        w-full max-w-md p-8 rounded-2xl
+        bg-surface backdrop-blur-xl
+        border border-border
+        shadow-xl z-10 text-center
+    "
             >
 
                 {/* HEADER */}
                 <div className="mb-6">
-                    <div className="bg-[#AAF0D1]/40 p-3 rounded-full inline-block mb-2">
-                        <Leaf className="text-[#228B22]" />
+                    <div className="bg-accent/40 p-3 rounded-full inline-block mb-2">
+                        <Leaf className="text-primary" />
                     </div>
 
-                    <h2 className="text-lg font-semibold text-[#1A3021]">
+                    <h2 className="text-lg font-semibold text-foreground">
                         Đổi mật khẩu mới
                     </h2>
 
-                    <p className="text-sm text-gray-500 mt-2">
-                        Mã đã gửi đến email sau đây
+                    <p className="text-sm text-foreground/60 mt-2">
+                        Mã đã gửi đến email của bạn
                     </p>
                 </div>
 
@@ -263,25 +263,25 @@ function VerifyEmailForm() {
                             value={email || ""}
                             readOnly
                             className="
-      w-full text-center text-sm
-      py-3 rounded-lg
-      border border-gray-200
-      bg-gray-100 text-gray-500
-      cursor-not-allowed
+        w-full text-center text-sm
+        py-3 rounded-lg
+        border border-border
+        bg-muted text-foreground/50
+        cursor-not-allowed
     "
                         />
                     </motion.div>
                     <motion.div variants={itemAnim}>
                         <div className="
-              flex items-center rounded-lg px-3
-              border border-gray-200
-              bg-white/70
-              transition-all duration-200
-              focus-within:border-[#228B22]
-              focus-within:ring-2
-              focus-within:ring-[#AAF0D1]
-            ">
-                            <Lock size={16} className="text-gray-400 mr-2" />
+    flex items-center rounded-lg px-3
+    border border-border
+    bg-background
+    transition-all duration-200
+    focus-within:border-primary
+    focus-within:ring-2
+    focus-within:ring-accent
+">
+                            <Lock size={16} className="text-foreground/40 mr-2" />
 
                             <input
                                 type={showPwd ? "text" : "password"}
@@ -289,13 +289,13 @@ function VerifyEmailForm() {
                                 onChange={handleChange}
                                 required
                                 placeholder="Mật khẩu mới"
-                                className="flex-1 py-3 outline-none bg-transparent text-sm text-[#1A3021]"
+                                className="flex-1 py-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
                             />
 
                             <button
                                 type="button"
                                 onClick={() => setShowPwd(!showPwd)}
-                                className="ml-2 text-gray-400 hover:text-[#228B22] transition"
+                                className="ml-2 text-foreground/40 hover:text-primary"
                             >
                                 {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
@@ -306,16 +306,13 @@ function VerifyEmailForm() {
                             <div className="flex justify-between items-center mb-1">
                                 <span className="text-xs font-medium text-gray-600">Mức độ bảo mật:</span>
                                 <span className={`text-xs font-bold ${strength <= 1 ? "text-red-500" :
-                                    strength === 2 ? "text-yellow-600" :
-                                        strength === 3 ? "text-[#228B22]" : "text-[#1A3021]"
+                                    strength === 2 ? "text-yellow-500" :
+                                        strength === 3 ? "text-primary" :
+                                            "text-foreground"
                                     }`}>
-                                    {strength <= 1 && "Yếu"}
-                                    {strength === 2 && "Trung bình"}
-                                    {strength === 3 && "Khá"}
-                                    {strength >= 4 && "Mạnh"}
                                 </span>
                             </div>
-                            <div className="h-1 bg-gray-200 rounded overflow-hidden">
+                            <div className="h-1 bg-border rounded overflow-hidden">
                                 <div
                                     className={`h-full transition-all duration-300 ease-in-out
                                                     ${strength <= 1
@@ -332,29 +329,29 @@ function VerifyEmailForm() {
                     )}
                     <motion.div variants={itemAnim}>
                         <div className="
-              flex items-center rounded-lg px-3
-              border border-gray-200
-              bg-white/70
-              transition-all duration-200
-              focus-within:border-[#228B22]
-              focus-within:ring-2
-              focus-within:ring-[#AAF0D1]
-            ">
-                            <Lock size={16} className="text-gray-400 mr-2" />
+    flex items-center rounded-lg px-3
+    border border-border
+    bg-background
+    transition-all duration-200
+    focus-within:border-primary
+    focus-within:ring-2
+    focus-within:ring-accent
+">
+                            <Lock size={16} className="text-foreground/40 mr-2" />
 
                             <input
                                 type={showConfirmPwd ? "text" : "password"}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
-                                placeholder="Xác nhận mật khẩu"
-                                className="flex-1 py-3 outline-none bg-transparent text-sm text-[#1A3021]"
+                                placeholder="Mật khẩu mới"
+                                className="flex-1 py-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
                             />
 
                             <button
                                 type="button"
                                 onClick={() => setShowConfirmPwd(!showConfirmPwd)}
-                                className="ml-2 text-gray-400 hover:text-[#228B22] transition"
+                                className="ml-2 text-foreground/40 hover:text-primary"
                             >
                                 {showConfirmPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
@@ -384,16 +381,16 @@ function VerifyEmailForm() {
                             }}
                             placeholder="••••••"
                             className="
-                w-full text-center text-2xl tracking-[10px]
-                py-3 rounded-lg
-                border border-gray-200
-                focus:border-[#228B22]
-                focus:ring-2 focus:ring-[#AAF0D1]
-                outline-none
-                font-mono
-                text-[#1A3021]
-                bg-white/70
-              "
+        w-full text-center text-2xl tracking-[10px]
+        py-3 rounded-lg
+        border border-border
+        focus:border-primary
+        focus:ring-2 focus:ring-accent
+        outline-none
+        font-mono
+        text-foreground
+        bg-background
+    "
                         />
                     </motion.div>
 
@@ -409,28 +406,24 @@ function VerifyEmailForm() {
                             newPassword !== confirmPassword
                         }
                         className="
-              w-full p-3 rounded-lg
-              bg-[#228B22] text-white font-medium
-              shadow-md hover:shadow-lg
-              transition
-              disabled:bg-gray-400
-            "
+        w-full p-3 rounded-lg
+        bg-primary text-white font-medium
+        shadow-md hover:brightness-110
+        transition
+        disabled:bg-gray-400
+    "
                     >
                         {loadingVerify ? "Đang kiểm tra..." : "Xác nhận"}
                     </motion.button>
                 </motion.form>
 
                 {/* RESEND */}
-                <p className="mt-6 text-sm text-gray-500">
+                <p className="mt-6 text-sm text-foreground/60">
                     Chưa nhận được mã?{" "}
                     <button
                         onClick={handleResendForgotPasswordOtp}
                         disabled={cooldown > 0 || loadingResend}
-                        className="
-              text-[#228B22] font-medium
-              hover:underline
-              disabled:text-gray-400
-            "
+                        className="text-primary font-medium hover:underline disabled:text-gray-400"
                     >
                         {cooldown > 0
                             ? `Gửi lại (${cooldown}s)`
@@ -441,8 +434,8 @@ function VerifyEmailForm() {
                 </p>
 
                 {/* FOOTER */}
-                <p className="mt-4 text-sm text-gray-500">
-                    <Link href="/login" className="text-[#228B22] hover:underline">
+                <p className="mt-4 text-sm text-foreground/60">
+                    <Link href="/login" className="text-primary hover:underline">
                         Quay về đăng nhập
                     </Link>
                 </p>

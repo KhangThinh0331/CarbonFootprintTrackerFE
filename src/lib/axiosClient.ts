@@ -1,5 +1,6 @@
 // src/lib/axiosClient.ts
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const axiosClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -29,14 +30,18 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response?.status === 401) {
-            // Token hết hạn hoặc sai -> Xóa token và đá về trang Login
+        const serverMessage = error.response?.data?.message;
+        const status = error.response?.status;
+        if (status === 401) {
+            toast.error(serverMessage || "Phiên đăng nhập hết hạn");
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('token');
-                window.location.href = '/login';
             }
         }
-        return Promise.reject(error);
+        if (status === 403) {
+            toast.error(serverMessage || "Bạn không có quyền truy cập");
+        }
+        return Promise.reject(serverMessage || error.message);
     }
 );
 

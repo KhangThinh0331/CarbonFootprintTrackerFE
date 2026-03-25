@@ -1,23 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FDFBF7;
+
+  /* Text chính */
+  --foreground: #1A3021;
+
+  /* 30% - Primary */
+  --primary: #10b981;
+
+  /* 10% - Accent */
+  --accent: #AAF0D1;
+
+  /* Surface (card, navbar) */
+  --surface: rgba(255, 255, 255, 0.7);
+
+  /* Border subtle */
+  --border: rgba(34, 139, 34, 0.15);
+
   --font-main: var(--font-noto-sans), -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif;
+}
+
+.dark {
+  --background: #0F1A14;
+  --foreground: #E6F4EA;
+
+  --primary: #10b981;
+  --accent: #AAF0D1;
+
+  --surface: rgba(22, 36, 28, 0.7);
+  --border: rgba(170, 240, 209, 0.15);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-main);
 }
 
 body {
@@ -25,8 +49,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-main) !important;
   font-weight: 500;
-  letter-spacing: -0.01em; /* Thu hẹp khoảng cách chữ một tí cho hiện đại */
+  letter-spacing: -0.01em;
   line-height: 1.4;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  transition: background 0.3s ease, color 0.3s ease;
 }

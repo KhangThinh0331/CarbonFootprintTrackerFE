@@ -81,19 +81,19 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center bg-[#FDFBF7] overflow-hidden">
+        <div className="relative flex min-h-screen items-center justify-center bg-background overflow-hidden">
 
             {/* BACKGROUND */}
             <div className="absolute inset-0">
-                <div className="absolute w-[500px] h-[500px] bg-[#AAF0D1] rounded-full blur-3xl opacity-20 -top-20 -left-20" />
-                <div className="absolute w-[400px] h-[400px] bg-[#AAF0D1] rounded-full blur-3xl opacity-10 bottom-0 right-0" />
+                <div className="absolute w-[500px] h-[500px] bg-accent rounded-full blur-3xl opacity-20 -top-20 -left-20" />
+                <div className="absolute w-[400px] h-[400px] bg-accent rounded-full blur-3xl opacity-10 bottom-0 right-0" />
             </div>
 
             {/* FLOATING LEAVES */}
             {[...Array(5)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute text-[#228B22]/30"
+                    className="absolute text-primary/30"
                     style={{
                         top: `${10 + i * 15}%`,
                         left: `${5 + i * 18}%`,
@@ -115,22 +115,22 @@ export default function ForgotPasswordPage() {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="w-full max-w-md p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-[#AAF0D1]/40 shadow-xl z-10"
+                className="w-full max-w-md p-8 rounded-2xl bg-surface backdrop-blur-xl border border-border shadow-xl z-10"
             >
 
                 {/* PROGRESS */}
                 {loading && (
-                    <div className="mb-4 h-1 bg-gray-200 rounded">
-                        <motion.div className="h-full bg-[#228B22]" animate={{ width: `${progress}%` }} />
+                    <div className="mb-4 h-1 bg-border rounded">
+                        <motion.div className="h-full bg-primary" animate={{ width: `${progress}%` }} />
                     </div>
                 )}
 
                 {/* HEADER */}
                 <div className="text-center mb-6">
-                    <div className="bg-[#AAF0D1]/40 p-3 rounded-full inline-block mb-2">
-                        <Leaf className="text-[#228B22]" />
+                    <div className="bg-accent/40 p-3 rounded-full inline-block mb-2">
+                        <Leaf className="text-primary" />
                     </div>
-                    <h2 className="text-lg font-semibold text-[#1A3021]">
+                    <h2 className="text-lg font-semibold text-foreground">
                         Quên mật khẩu
                     </h2>
                 </div>
@@ -150,9 +150,8 @@ export default function ForgotPasswordPage() {
                         icon={<Mail size={16} />}
                         name="email"
                         placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e: any) => setEmail(e.target.value)}
                     />
-
 
                     {/* BUTTON */}
                     <motion.button
@@ -160,14 +159,14 @@ export default function ForgotPasswordPage() {
                         whileTap={{ scale: 0.97 }}
                         whileHover={{ scale: 1.02 }}
                         disabled={loading}
-                        className="w-full p-3 rounded-lg bg-[#228B22] text-white font-medium hover:brightness-110 active:scale-95 transition disabled:bg-gray-300"
+                        className="w-full p-3 rounded-lg bg-primary text-white font-medium hover:brightness-110 active:scale-95 transition disabled:bg-gray-300"
                     >
                         {loading ? "Đang xử lý..." : "Tiếp tục"}
                     </motion.button>
 
                     {/* FOOTER */}
-                    <p className="text-center text-sm text-[#1A3021]/60">
-                        <Link href="/login" className="text-[#228B22] hover:underline">
+                    <p className="text-center text-sm text-foreground/60">
+                        <Link href="/login" className="text-primary hover:underline">
                             Quay lại
                         </Link>
                     </p>
@@ -180,17 +179,19 @@ export default function ForgotPasswordPage() {
 /* INPUT */
 function InputField({ icon, name, placeholder, type = "text", onChange }: any) {
     return (
-        <div className="flex items-center border border-[#AAF0D1]/50 rounded-lg px-3
-                    focus-within:border-[#228B22] 
-                    focus-within:ring-2 focus-within:ring-[#AAF0D1]">
-            <div className="text-[#1A3021]/40 mr-2">{icon}</div>
+        <div className="
+            flex items-center border border-border rounded-lg px-3
+            focus-within:border-primary 
+            focus-within:ring-2 focus-within:ring-accent
+        ">
+            <div className="text-foreground/40 mr-2">{icon}</div>
             <input
                 type={type}
                 name={name}
                 placeholder={placeholder}
                 onChange={onChange}
                 required
-                className="w-full p-3 outline-none bg-transparent text-sm text-[#1A3021] placeholder:text-[#1A3021]/40"
+                className="w-full p-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
             />
         </div>
     );
