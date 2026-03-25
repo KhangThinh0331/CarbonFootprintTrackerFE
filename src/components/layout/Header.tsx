@@ -31,6 +31,16 @@ export default function Header() {
     const [loading, setLoading] = useState(true);
     const [mounted, setMounted] = useState(false);
 
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-red-500', 'bg-blue-500', 'bg-green-600', 'bg-yellow-600',
+            'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
+        ];
+        // Tính tổng mã ASCII của các ký tự trong tên để chọn màu
+        const charCodeSum = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return colors[charCodeSum % colors.length];
+    };
+
     useEffect(() => {
         setMounted(true);
         const fetchUser = async () => {
@@ -67,8 +77,8 @@ export default function Header() {
         <motion.nav
             animate={{ height: scrolled ? 70 : 90 }}
             className={`sticky top-0 z-50 transition-all duration-300 border-b ${scrolled
-                    ? "bg-background/80 backdrop-blur-lg border-border shadow-sm"
-                    : "bg-transparent border-transparent"
+                ? "bg-background/80 backdrop-blur-lg border-border shadow-sm"
+                : "bg-transparent border-transparent"
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
@@ -116,7 +126,9 @@ export default function Header() {
                                     {user.avatarUrl ? (
                                         <img src={user.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
                                     ) : (
-                                        user.username.charAt(0).toUpperCase()
+                                        <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white text-lg font-bold ${getAvatarColor(user.fullName || "User")}`}>
+                                            {user.fullName ? user.fullName.charAt(0).toUpperCase() : "?"}
+                                        </div>
                                     )}
                                 </div>
                                 <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
@@ -134,7 +146,7 @@ export default function Header() {
                                         >
                                             <div className="px-4 py-3 border-b border-border/50 mb-1">
                                                 <p className="text-xs font-bold opacity-40 uppercase tracking-widest">Tài khoản</p>
-                                                <p className="font-bold truncate">{user.username}</p>
+                                                <p className="font-bold truncate">{user.fullName}</p>
                                             </div>
                                             <Link
                                                 href="/profile"

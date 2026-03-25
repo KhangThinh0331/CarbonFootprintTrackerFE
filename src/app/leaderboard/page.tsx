@@ -22,7 +22,7 @@ import { useToast } from "@/src/context/toastContext";
 
 interface LeaderboardUser {
     rank: number;
-    username: string;
+    fullName: string;
     totalCo2: number;
     badge: string;
     avatarUrl?: string;
@@ -62,7 +62,7 @@ export default function LeaderboardPage() {
     // Logic lọc dữ liệu tổng hợp
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
-            const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = user.fullName.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesBadge = selectedBadge === "Tất cả" || user.badge === selectedBadge;
             return matchesSearch && matchesBadge;
         });
@@ -128,8 +128,8 @@ export default function LeaderboardPage() {
                                 key={badge}
                                 onClick={() => setSelectedBadge(badge)}
                                 className={`px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all border ${selectedBadge === badge
-                                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
-                                        : "bg-surface text-foreground/50 border-border hover:border-primary/50"
+                                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105"
+                                    : "bg-surface text-foreground/50 border-border hover:border-primary/50"
                                     }`}
                             >
                                 {badge}
@@ -161,7 +161,7 @@ export default function LeaderboardPage() {
                         <AnimatePresence mode="popLayout">
                             {displayList.map((user, index) => (
                                 <motion.div
-                                    key={user.username}
+                                    key={user.fullName}
                                     layout
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -179,7 +179,7 @@ export default function LeaderboardPage() {
 
                                         <div>
                                             <div className="flex items-center gap-2">
-                                                <p className="font-bold text-sm leading-none">{user.username}</p>
+                                                <p className="font-bold text-sm leading-none">{user.fullName}</p>
                                                 {user.rank <= 3 && <Crown size={12} className="text-yellow-500" />}
                                             </div>
                                             <p className="text-[10px] uppercase font-black tracking-widest opacity-40 text-primary mt-1">{user.badge}</p>
@@ -228,15 +228,26 @@ export default function LeaderboardPage() {
 // Sub-components giữ nguyên logic Avatar và PodiumCard của bạn
 function UserAvatar({ user, size = "md" }: { user: LeaderboardUser, size?: "sm" | "md" | "lg" }) {
     const [imgError, setImgError] = useState(false);
-    const initial = user.username.charAt(0).toUpperCase();
+    const initial = user.fullName.charAt(0).toUpperCase();
     const dimensions = { sm: "w-10 h-10 text-sm", md: "w-16 h-16 text-xl", lg: "w-20 h-20 text-2xl" };
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-red-500', 'bg-blue-500', 'bg-green-600', 'bg-yellow-600',
+            'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
+        ];
+        // Tính tổng mã ASCII của các ký tự trong tên để chọn màu
+        const charCodeSum = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return colors[charCodeSum % colors.length];
+    };
 
     return (
         <div className={`${dimensions[size]} rounded-full bg-background border-2 border-border overflow-hidden flex items-center justify-center shrink-0 shadow-inner`}>
             {user.avatarUrl && !imgError ? (
-                <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" onError={() => setImgError(true)} />
+                <img src={user.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" onError={() => setImgError(true)} />
             ) : (
-                <span className="font-black opacity-30">{initial}</span>
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold ${getAvatarColor(user.fullName || "User")}`}>
+                    {initial}
+                </div>
             )}
         </div>
     );
@@ -260,7 +271,7 @@ function PodiumCard({ user, rank, isMain = false }: { user: LeaderboardUser, ran
                     </div>
                 </div>
                 <div>
-                    <h3 className="font-black text-lg line-clamp-1 leading-tight">{user.username}</h3>
+                    <h3 className="font-black text-lg line-clamp-1 leading-tight">{user.fullName}</h3>
                     <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mt-1">
                         {user.badge}
                     </span>

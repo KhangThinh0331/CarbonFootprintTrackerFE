@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        const serverMessage = error.response?.data?.message;
+        const serverMessage = error.response?.data?.message || error.message;
         const status = error.response?.status;
         if (status === 401) {
             toast.error(serverMessage || "Phiên đăng nhập hết hạn");
@@ -41,7 +41,7 @@ axiosClient.interceptors.response.use(
         if (status === 403) {
             toast.error(serverMessage || "Bạn không có quyền truy cập");
         }
-        return Promise.reject(serverMessage || error.message);
+        return Promise.reject(error); 
     }
 );
 
