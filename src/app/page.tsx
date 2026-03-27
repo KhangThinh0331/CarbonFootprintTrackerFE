@@ -252,7 +252,14 @@ export default function DashboardPage() {
     </div>
   );
 
-  if (loading) return <DashboardSkeleton />;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+        <p className="text-sm font-bold opacity-50 tracking-widest uppercase">Đang tải trang...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -564,19 +571,6 @@ export default function DashboardPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
-
-function DashboardSkeleton() {
-  return (
-    <div className="max-w-7xl mx-auto p-8 space-y-8">
-      <div className="h-12 w-48 bg-muted animate-pulse rounded-xl" />
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-4 h-64 bg-muted animate-pulse rounded-[2rem]" />
-        <div className="col-span-8 h-64 bg-muted animate-pulse rounded-[2rem]" />
-      </div>
-      <div className="h-96 bg-muted animate-pulse rounded-[2.5rem]" />
     </div>
   );
 }
