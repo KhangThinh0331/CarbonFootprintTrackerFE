@@ -344,7 +344,7 @@ function VerifyEmailForm() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
-                                placeholder="Mật khẩu mới"
+                                placeholder="Xác nhận mật khẩu mới"
                                 className="flex-1 py-3 outline-none bg-transparent text-sm text-foreground placeholder:text-foreground/40"
                             />
 

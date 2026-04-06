@@ -219,7 +219,7 @@ export default function RegisterPage() {
                             className="space-y-4"
                         >
                             <InputField icon={<User size={16} />} name="username" placeholder="Tên đăng nhập" onChange={handleChange} />
-                            <InputField icon={<IdCard size={16} />} name="fullName" placeholder="Họ và tên" onChange={handleChange} />
+                            <InputField icon={<IdCard size={16} />} name="fullName" placeholder="Tên người dùng" onChange={handleChange} />
                             <InputField icon={<Mail size={16} />} name="email" placeholder="Email" onChange={handleChange} />
 
                             {/* PASSWORD */}

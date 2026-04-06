@@ -13,7 +13,8 @@ import {
     ChevronDown,
     LogIn,
     UserPlus,
-    LayoutDashboard
+    LayoutDashboard,
+    Target
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { userService } from "@/src/services/userService";
@@ -154,6 +155,13 @@ export default function Header() {
                                                 className="flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-2xl hover:bg-primary/10 hover:text-primary transition-all"
                                             >
                                                 <UserIcon size={18} /> Hồ sơ của tôi
+                                            </Link>
+                                            <Link
+                                                href="/goals"
+                                                onClick={() => setOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-2xl hover:bg-primary/10 hover:text-primary transition-all"
+                                            >
+                                                <Target size={18} /> Mục tiêu cá nhân
                                             </Link>
                                             <button
                                                 onClick={handleLogout}

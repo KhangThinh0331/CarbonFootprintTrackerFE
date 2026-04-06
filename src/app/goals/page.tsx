@@ -321,23 +321,62 @@ export default function GoalsPage() {
 
                                 {/* PAGINATION */}
                                 {totalPages > 1 && (
-                                    <div className="flex justify-center items-center gap-4 mt-8 pt-4 border-t border-border">
+                                    <div className="flex justify-center items-center gap-2 mt-8 pt-4 border-t border-border flex-wrap">
+
+                                        {/* Nút Về Đầu */}
                                         <button
-                                            onClick={() => setPage(p => Math.max(0, p - 1))}
+                                            onClick={() => setPage(0)}
                                             disabled={page === 0}
-                                            className="px-6 py-2 bg-surface border border-border rounded-xl font-bold hover:bg-border transition disabled:opacity-30 disabled:hover:bg-surface"
+                                            className="px-3 py-2 bg-surface border border-border rounded-xl font-bold hover:bg-border transition disabled:opacity-30"
                                         >
-                                            Trước
+                                            Đầu
                                         </button>
-                                        <span className="text-sm font-bold opacity-50">
-                                            Trang {page + 1} / {totalPages}
-                                        </span>
+
+                                        <div className="flex gap-2 mx-2">
+                                            {(() => {
+                                                const pages = [];
+                                                const range = 1; // Số lượng trang hiển thị quanh trang hiện tại
+
+                                                for (let i = 0; i < totalPages; i++) {
+                                                    // Luôn hiện trang đầu, trang cuối, và các trang lân cận trang hiện tại
+                                                    if (
+                                                        i === 0 ||
+                                                        i === totalPages - 1 ||
+                                                        (i >= page - range && i <= page + range)
+                                                    ) {
+                                                        pages.push(
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => setPage(i)}
+                                                                className={`w-10 h-10 rounded-xl font-bold transition border ${page === i
+                                                                        ? "bg-primary text-white border-primary"
+                                                                        : "bg-surface border-border hover:bg-border"
+                                                                    }`}
+                                                            >
+                                                                {i + 1}
+                                                            </button>
+                                                        );
+                                                    }
+                                                    // Thêm dấu ba chấm
+                                                    else if (i === page - range - 1 || i === page + range + 1) {
+                                                        pages.push(
+                                                            <span key={i} className="w-10 h-10 flex items-center justify-center opacity-50">
+                                                                ...
+                                                            </span>
+                                                        );
+                                                    }
+                                                }
+                                                return pages;
+                                            })()}
+                                        </div>
+
+                                        {/* Nút Đến Cuối */}
                                         <button
-                                            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                                            onClick={() => setPage(totalPages - 1)}
                                             disabled={page >= totalPages - 1}
-                                            className="px-6 py-2 bg-surface border border-border rounded-xl font-bold hover:bg-border transition disabled:opacity-30 disabled:hover:bg-surface"
+                                            className="px-3 py-2 bg-surface border border-border rounded-xl font-bold hover:bg-border transition disabled:opacity-30"
                                         >
-                                            Sau
+                                            Cuối
                                         </button>
                                     </div>
                                 )}

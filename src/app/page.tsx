@@ -352,7 +352,7 @@ export default function DashboardPage() {
           <div className="p-6 border-b border-border flex justify-between items-center bg-surface/50">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-xl text-primary"><History size={20} /></div>
-              <h3 className="font-extrabold text-lg">Hoạt động gần đây</h3>
+              <h3 className="font-extrabold text-lg">Lịch sử hoạt động</h3>
             </div>
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -405,17 +405,50 @@ export default function DashboardPage() {
             <div className="p-6 border-t border-border flex justify-center items-center gap-8">
               <button
                 disabled={currentPage === 0}
-                onClick={() => setCurrentPage(prev => prev - 1)}
+                onClick={() => setCurrentPage(0)}
                 className="p-2 rounded-full hover:bg-primary/10 disabled:opacity-20 transition-colors"
               >
                 <ChevronLeft size={24} />
               </button>
-              <span className="text-sm font-bold opacity-60">
-                {currentPage + 1} <span className="mx-1 opacity-30">/</span> {totalPages}
-              </span>
+              <div className="flex gap-2 mx-2">
+                {(() => {
+                  const pages = [];
+                  const range = 1; // Số lượng trang hiển thị quanh trang hiện tại
+
+                  for (let i = 0; i < totalPages; i++) {
+                    // Luôn hiện trang đầu, trang cuối, và các trang lân cận trang hiện tại
+                    if (
+                      i === 0 ||
+                      i === totalPages - 1 ||
+                      (i >= currentPage - range && i <= currentPage + range)
+                    ) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => setCurrentPage(i)}
+                          className={`w-10 h-10 rounded-xl font-bold transition border ${currentPage === i
+                              ? "bg-primary text-white border-primary"
+                              : "bg-surface border-border hover:bg-border"
+                            }`}
+                        >
+                          {i + 1}
+                        </button>
+                      );
+                    }
+                    else if (i === currentPage - range - 1 || i === currentPage + range + 1) {
+                      pages.push(
+                        <span key={i} className="w-10 h-10 flex items-center justify-center opacity-50">
+                          ...
+                        </span>
+                      );
+                    }
+                  }
+                  return pages;
+                })()}
+              </div>
               <button
-                disabled={currentPage === totalPages - 1}
-                onClick={() => setCurrentPage(prev => prev + 1)}
+                disabled={currentPage >= totalPages - 1}
+                onClick={() => setCurrentPage(totalPages - 1)}
                 className="p-2 rounded-full hover:bg-primary/10 disabled:opacity-20 transition-colors"
               >
                 <ChevronRight size={24} />
