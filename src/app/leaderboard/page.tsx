@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Trophy,
     Medal,
     Award,
     Loader2,
@@ -79,8 +78,7 @@ export default function LeaderboardPage() {
         const fetchLeaderboard = async () => {
             setLoading(true);
             try {
-                // BE giờ đã xử lý search theo tên
-                const res = await leaderboardService.getMonthlyRanking(debouncedSearch);
+                const res = await leaderboardService.getRanking(debouncedSearch);
                 setUsers(res.data);
             } catch (error) {
                 toast.error("Lỗi tải bảng xếp hạng");
@@ -91,7 +89,6 @@ export default function LeaderboardPage() {
         fetchLeaderboard();
     }, [debouncedSearch, toast]);
 
-    // Client-side filter: Chỉ còn giữ nhiệm vụ lọc theo Badge
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
             const matchesBadge = selectedBadge === "Tất cả" || user.badge === selectedBadge;
@@ -116,9 +113,9 @@ export default function LeaderboardPage() {
                         animate={{ scale: 1 }}
                         className="inline-flex p-3 bg-primary/10 rounded-2xl text-primary mb-2"
                     >
-                        <Trophy size={32} strokeWidth={2.5} />
+                        <Award size={32} strokeWidth={2.5} />
                     </motion.div>
-                    <h1 className="text-4xl font-black tracking-tight">Bảng Xếp Hạng Tháng</h1>
+                    <h1 className="text-4xl font-black tracking-tight">Bảng Xếp Hạng</h1>
                     <p className="opacity-60 max-w-md mx-auto italic font-medium">
                         "Hành động nhỏ, tác động lớn. Cùng nhau giảm dấu chân Carbon!"
                     </p>

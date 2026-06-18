@@ -7,6 +7,7 @@ import {
     Leaf,
     LogOut,
     Trophy,
+    Award,
     User as UserIcon,
     Moon,
     Sun,
@@ -98,7 +99,8 @@ export default function Header() {
                 {/* CENTER NAV (DESKTOP) */}
                 <div className="hidden md:flex items-center bg-surface/50 border border-border p-1.5 rounded-2xl gap-1">
                     <NavLink href="/" icon={<LayoutDashboard size={16} />} label="Bảng điều khiển" />
-                    <NavLink href="/leaderboard" icon={<Trophy size={16} />} label="Xếp hạng" />
+                    <NavLink href="/leaderboard" icon={<Award size={16} />} label="Xếp hạng" />
+                    <NavLink href="/challenges" icon={<Trophy size={16} />} label="Thử thách" />
                 </div>
 
                 {/* RIGHT SIDE */}
