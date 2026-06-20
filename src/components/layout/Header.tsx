@@ -15,7 +15,8 @@ import {
     LogIn,
     UserPlus,
     LayoutDashboard,
-    Target
+    Target,
+    CircleHelp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { userService } from "@/src/services/userService";
@@ -83,10 +84,10 @@ export default function Header() {
                 : "bg-transparent border-transparent"
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-6 h-full grid grid-cols-3 items-center">
 
                 {/* LOGO */}
-                <Link href="/" className="flex items-center gap-2.5 group">
+                <Link href="/" className="justify-self-start flex items-center gap-2.5 group">
                     <div className="p-2.5 rounded-2xl bg-primary text-white shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                         <Leaf size={22} fill="currentColor" />
                     </div>
@@ -97,14 +98,62 @@ export default function Header() {
                 </Link>
 
                 {/* CENTER NAV (DESKTOP) */}
-                <div className="hidden md:flex items-center bg-surface/50 border border-border p-1.5 rounded-2xl gap-1">
-                    <NavLink href="/" icon={<LayoutDashboard size={16} />} label="Bảng điều khiển" />
-                    <NavLink href="/leaderboard" icon={<Award size={16} />} label="Xếp hạng" />
-                    <NavLink href="/challenges" icon={<Trophy size={16} />} label="Thử thách" />
+                <div className="hidden md:flex items-center bg-surface/50 border border-border p-1.5 rounded-2xl gap-1 justify-self-center">
+
+                    <NavLink
+                        href="/"
+                        icon={<LayoutDashboard size={16} />}
+                        label="Trang chủ"
+                    />
+
+                    <NavLink
+                        href="/leaderboard"
+                        icon={<Award size={16} />}
+                        label="Bảng xếp hạng"
+                    />
+
+                    <NavLink
+                        href="/challenges"
+                        icon={<Trophy size={16} />}
+                        label="Thử thách"
+                    />
+
+                    {/* Did You Know */}
+                    <Link
+                        href="/calculation"
+                        className="group relative flex items-center justify-center w-9 h-9 rounded-xl text-foreground/60 hover:text-primary hover:bg-background transition-all"
+                    >
+                        <CircleHelp size={18} />
+
+                        <div
+                            className="
+                pointer-events-none
+                absolute top-full mt-3 left-1/2 -translate-x-1/2
+                whitespace-nowrap
+                rounded-xl
+                bg-foreground
+                text-background
+                text-xs
+                font-semibold
+                px-3 py-2
+                opacity-0
+                translate-y-1
+                group-hover:opacity-100
+                group-hover:translate-y-0
+                transition-all
+                duration-200
+                shadow-xl
+                z-50
+            "
+                        >
+                            Có thể bạn chưa biết
+                        </div>
+                    </Link>
+
                 </div>
 
                 {/* RIGHT SIDE */}
-                <div className="flex items-center gap-3">
+                <div className="justify-self-end flex items-center gap-3">
 
                     {/* THEME TOGGLE */}
                     <button

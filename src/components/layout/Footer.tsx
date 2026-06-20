@@ -39,6 +39,7 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <FooterLink href="/" label="Dashboard" />
                             <FooterLink href="/leaderboard" label="Bảng xếp hạng" />
+                            <FooterLink href="/challenges" label="Thử thách" />
                         </ul>
                     </div>
 

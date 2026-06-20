@@ -327,6 +327,38 @@ export default function ChallengesPage() {
                     <div className="h-[220px] w-full">
                     </div>
                 </div>
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-2 mt-10">
+                        <button
+                            disabled={currentPage === 0}
+                            onClick={() => setCurrentPage(prev => prev - 1)}
+                            className="px-4 py-2 rounded-xl border border-border disabled:opacity-40"
+                        >
+                            Trước
+                        </button>
+
+                        {Array.from({ length: totalPages }).map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentPage(index)}
+                                className={`w-10 h-10 rounded-xl font-bold transition ${currentPage === index
+                                        ? "bg-primary text-white"
+                                        : "border border-border hover:bg-muted"
+                                    }`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            disabled={currentPage === totalPages - 1}
+                            onClick={() => setCurrentPage(prev => prev + 1)}
+                            className="px-4 py-2 rounded-xl border border-border disabled:opacity-40"
+                        >
+                            Sau
+                        </button>
+                    </div>
+                )}
             </main>
 
             {/* ========================================== */}
