@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -45,6 +45,82 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function LeaderboardPage() {
+    <Suspense fallback={<LeaderboardLoading />}>
+        <LeaderboardContent />
+    </Suspense>
+}
+
+// Giữ nguyên các function UserAvatar và PodiumCard bên dưới
+function UserAvatar({ user, size = "md" }: { user: LeaderboardUser, size?: "sm" | "md" | "lg" }) {
+    const [imgError, setImgError] = useState(false);
+    const initial = user.fullName.charAt(0).toUpperCase();
+    const dimensions = { sm: "w-10 h-10 text-sm", md: "w-16 h-16 text-xl", lg: "w-20 h-20 text-2xl" };
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-red-500', 'bg-blue-500', 'bg-green-600', 'bg-yellow-600',
+            'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
+        ];
+        const charCodeSum = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return colors[charCodeSum % colors.length];
+    };
+
+    return (
+        <div className={`${dimensions[size]} rounded-full bg-background border-2 border-border overflow-hidden flex items-center justify-center shrink-0 shadow-inner`}>
+            {user.avatarUrl && !imgError ? (
+                <img src={user.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" onError={() => setImgError(true)} />
+            ) : (
+                <div className={`w-full h-full rounded-full flex items-center justify-center text-white font-bold ${getAvatarColor(user.fullName || "User")}`}>
+                    {initial}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function PodiumCard({ user, rank, isMain = false }: { user: LeaderboardUser, rank: number, color: string, isMain?: boolean }) {
+    const Icon = rank === 1 ? Crown : (rank === 2 ? Medal : Award);
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`relative bg-surface border-2 rounded-[2.5rem] p-6 text-center transition-all ${isMain ? "border-primary shadow-2xl shadow-primary/10 pb-12 z-10 scale-110" : "border-border pb-8 opacity-90 scale-100"}`}
+        >
+            <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-surface border-2 flex items-center justify-center shadow-lg ${isMain ? "border-primary text-primary" : "border-border text-foreground/50"}`}>
+                <Icon size={24} strokeWidth={2.5} />
+            </div>
+            <div className="mt-4 space-y-3">
+                <div className="flex justify-center">
+                    <div className={isMain ? "ring-4 ring-primary/20 rounded-full" : ""}>
+                        <UserAvatar user={user} size={isMain ? "lg" : "md"} />
+                    </div>
+                </div>
+                <div>
+                    <h3 className="font-black text-lg line-clamp-1 leading-tight">{user.fullName}</h3>
+                    <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mt-1">
+                        {user.badge}
+                    </span>
+                </div>
+                <div className="pt-2 border-t border-border/50">
+                    <div className="flex items-baseline justify-center gap-1">
+                        <span className={`font-black tracking-tighter ${isMain ? "text-4xl" : "text-2xl"}`}>{user.totalCo2.toFixed(1)}</span>
+                        <span className="text-xs font-bold opacity-40 uppercase">kg</span>
+                    </div>
+                </div>
+            </div>
+            {isMain && <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-primary text-white text-[10px] font-black rounded-full shadow-lg uppercase tracking-[0.2em]">Champion</div>}
+        </motion.div>
+    );
+}
+
+function LeaderboardLoading() {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+    );
+}
+
+function LeaderboardContent() {
     const toast = useToast();
     const router = useRouter();
     const pathname = usePathname();
@@ -252,67 +328,5 @@ export default function LeaderboardPage() {
 
             <Footer />
         </div>
-    );
-}
-
-// Giữ nguyên các function UserAvatar và PodiumCard bên dưới
-function UserAvatar({ user, size = "md" }: { user: LeaderboardUser, size?: "sm" | "md" | "lg" }) {
-    const [imgError, setImgError] = useState(false);
-    const initial = user.fullName.charAt(0).toUpperCase();
-    const dimensions = { sm: "w-10 h-10 text-sm", md: "w-16 h-16 text-xl", lg: "w-20 h-20 text-2xl" };
-    const getAvatarColor = (name: string) => {
-        const colors = [
-            'bg-red-500', 'bg-blue-500', 'bg-green-600', 'bg-yellow-600',
-            'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
-        ];
-        const charCodeSum = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-        return colors[charCodeSum % colors.length];
-    };
-
-    return (
-        <div className={`${dimensions[size]} rounded-full bg-background border-2 border-border overflow-hidden flex items-center justify-center shrink-0 shadow-inner`}>
-            {user.avatarUrl && !imgError ? (
-                <img src={user.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" onError={() => setImgError(true)} />
-            ) : (
-                <div className={`w-full h-full rounded-full flex items-center justify-center text-white font-bold ${getAvatarColor(user.fullName || "User")}`}>
-                    {initial}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function PodiumCard({ user, rank, isMain = false }: { user: LeaderboardUser, rank: number, color: string, isMain?: boolean }) {
-    const Icon = rank === 1 ? Crown : (rank === 2 ? Medal : Award);
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`relative bg-surface border-2 rounded-[2.5rem] p-6 text-center transition-all ${isMain ? "border-primary shadow-2xl shadow-primary/10 pb-12 z-10 scale-110" : "border-border pb-8 opacity-90 scale-100"}`}
-        >
-            <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-surface border-2 flex items-center justify-center shadow-lg ${isMain ? "border-primary text-primary" : "border-border text-foreground/50"}`}>
-                <Icon size={24} strokeWidth={2.5} />
-            </div>
-            <div className="mt-4 space-y-3">
-                <div className="flex justify-center">
-                    <div className={isMain ? "ring-4 ring-primary/20 rounded-full" : ""}>
-                        <UserAvatar user={user} size={isMain ? "lg" : "md"} />
-                    </div>
-                </div>
-                <div>
-                    <h3 className="font-black text-lg line-clamp-1 leading-tight">{user.fullName}</h3>
-                    <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mt-1">
-                        {user.badge}
-                    </span>
-                </div>
-                <div className="pt-2 border-t border-border/50">
-                    <div className="flex items-baseline justify-center gap-1">
-                        <span className={`font-black tracking-tighter ${isMain ? "text-4xl" : "text-2xl"}`}>{user.totalCo2.toFixed(1)}</span>
-                        <span className="text-xs font-bold opacity-40 uppercase">kg</span>
-                    </div>
-                </div>
-            </div>
-            {isMain && <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-primary text-white text-[10px] font-black rounded-full shadow-lg uppercase tracking-[0.2em]">Champion</div>}
-        </motion.div>
     );
 }
