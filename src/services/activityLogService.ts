@@ -15,7 +15,7 @@ export const activityLogService = {
   },
 
   // 2. Lấy danh sách lịch sử hoạt động của User đang đăng nhập
-  getMyLogs: (page: number = 0, size: number = 20, month = null, year = null) => {
+  getMyLogs: (page: number = 0, size: number = 20, month?: number | null, year?: number | null) => {
     return axiosClient.get(`/activity-logs`, {
       params: {
         page,
@@ -27,7 +27,7 @@ export const activityLogService = {
   },
 
   // 3. Lấy tổng lượng CO2 trong tháng (nếu Backend có API này, nếu chưa có ta sẽ tính ở Frontend tạm)
-  getTotalCo2: (month = null, year = null) => {
+  getTotalCo2: (month?: number | null, year?: number | null) => {
     return axiosClient.get(`/activity-logs/total-co2`, {
       params: {
         month,
