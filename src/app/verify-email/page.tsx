@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authService } from "@/src/services/authService";
 import { useToast } from "@/src/context/toastContext";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Leaf } from "lucide-react";
 
 /* ================= ANIMATION ================= */
-const itemAnim = {
+const itemAnim: Variants = {
     hidden: { opacity: 0, y: 12 },
     visible: {
         opacity: 1,
