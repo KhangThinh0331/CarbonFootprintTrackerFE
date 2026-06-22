@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Leaf, User, Lock, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { Variants } from "framer-motion";
 import { authService } from "@/src/services/authService";
 import { useToast } from "@/src/context/toastContext";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 /* ================= ANIMATION ================= */
-const itemAnim = {
+const itemAnim: Variants = {
     hidden: { opacity: 0, y: 12 },
     visible: {
         opacity: 1,
