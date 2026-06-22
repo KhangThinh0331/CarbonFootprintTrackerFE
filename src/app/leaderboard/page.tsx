@@ -45,9 +45,11 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function LeaderboardPage() {
-    <Suspense fallback={<LeaderboardLoading />}>
-        <LeaderboardContent />
-    </Suspense>
+    return (
+        <Suspense fallback={<LeaderboardLoading />}>
+            <LeaderboardContent />
+        </Suspense>
+    );
 }
 
 // Giữ nguyên các function UserAvatar và PodiumCard bên dưới
